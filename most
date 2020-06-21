@@ -1,7 +1,30 @@
+#!/usr/bin/python3
+
 import sqlite3
 import os
 import requests
+import sys
 from bs4 import BeautifulSoup
+
+if len(sys.argv) < 2:
+    print('''Error: MOST requires an url as starting point. See
+    --help or -h for more.''')
+    exit()
+
+if sys.argv[1] == '--help' or sys.argv[1] == '-h':
+    print('''
+    MOST v0.1 - created by Simone Franco
+    @simizfo on Twitter - me@simonefranco.net
+    A basic crawler for learning purposes.
+
+    Usage ---
+    main.py url
+    
+    where url is the starting point of the crawler. This will generate
+    a sqlite3 db containing a table with the crawled urls, each having
+    its reference and the round when it is scanned.
+    ''')
+    exit()
 
 def getURL(page):
     """
@@ -30,9 +53,9 @@ sqlconnection = sqlite3.connect('data/data.db')
 
 sql = sqlconnection.cursor()
 
-sql.execute('''CREATE TABLE IF NOT EXISTS urls (url text, ref text, round int);''')
+sql.execute('CREATE TABLE IF NOT EXISTS urls (url text, ref text, round int);')
 
-sql.execute('''INSERT INTO urls VALUES ('http://www.google.com', null, 0);''')
+sql.execute('INSERT INTO urls VALUES (?, null, 0);', sys.argv[1])
 
 sqlconnection.commit()
 
