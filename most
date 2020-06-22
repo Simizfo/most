@@ -26,6 +26,8 @@ if sys.argv[1] == '--help' or sys.argv[1] == '-h':
     ''')
     exit()
 
+print(sys.argv[1])
+
 def getURL(page):
     """
 
@@ -55,7 +57,7 @@ sql = sqlconnection.cursor()
 
 sql.execute('CREATE TABLE IF NOT EXISTS urls (url text, ref text, round int);')
 
-sql.execute('INSERT INTO urls VALUES (?, null, 0);', sys.argv[1])
+sql.execute('INSERT INTO urls VALUES (?, null, 0);', (sys.argv[1],))
 
 sqlconnection.commit()
 
@@ -76,6 +78,7 @@ while True:
                 response = requests.get(row[0])
             except:
                 print('Maybe not a valid url? check more!')
+                continue
             page = str(BeautifulSoup(response.content, features="html.parser"))
             url = 'starting'
             while url:
